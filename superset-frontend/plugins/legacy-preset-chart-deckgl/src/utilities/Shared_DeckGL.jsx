@@ -363,6 +363,28 @@ export const reverseLongLat = {
   },
 };
 
+// Example usage
+const styleDefinitionsUrl = '/static/assets/map-styles.json';
+
+(async() => {
+  try {
+    const response = await(fetch(styleDefinitionsUrl));
+    styleDefinitions = await response.json();
+    console.log("Read Styles File...")
+  }
+  catch (error) {
+    console.error(error)
+  }
+})();
+
+export var styleDefinitions = {
+  choices: [
+    ['/static/assets/osm.json', 'OSM'],
+  ],
+  default: '/static/assets/osm.json',
+}
+
+
 export const mapboxStyle = {
   name: 'mapbox_style',
   config: {
@@ -370,16 +392,13 @@ export const mapboxStyle = {
     label: t('Map Style'),
     clearable: false,
     renderTrigger: true,
-    choices: [
-      ['mapbox://styles/mapbox/streets-v9', t('Streets')],
-      ['mapbox://styles/mapbox/dark-v9', t('Dark')],
-      ['mapbox://styles/mapbox/light-v9', t('Light')],
-      ['mapbox://styles/mapbox/satellite-streets-v9', t('Satellite Streets')],
-      ['mapbox://styles/mapbox/satellite-v9', t('Satellite')],
-      ['mapbox://styles/mapbox/outdoors-v9', t('Outdoors')],
-    ],
-    default: 'mapbox://styles/mapbox/light-v9',
+    choices: styleDefinitions.choices,
+    default: styleDefinitions.default,
     description: t('Base layer map style'),
+    mapStateToProps: state => ({
+      choices: styleDefinitions.choices,
+      default: styleDefinitions.default
+    })
   },
 };
 
