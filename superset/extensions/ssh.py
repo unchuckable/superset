@@ -25,7 +25,6 @@ from paramiko import RSAKey
 
 from superset.databases.utils import make_url_safe
 from superset.utils.class_utils import load_class_from_name
-from superset.utils.ssh_tunnel import get_default_port
 
 if TYPE_CHECKING:
     from superset.databases.ssh_tunnel.models import SSHTunnel
@@ -53,6 +52,8 @@ class SSHManager:
         ssh_tunnel: "SSHTunnel",
         sqlalchemy_database_uri: str,
     ) -> sshtunnel.SSHTunnelForwarder:
+        from superset.utils.ssh_tunnel import get_default_port
+
         url = make_url_safe(sqlalchemy_database_uri)
         backend = url.get_backend_name()
         params = {
