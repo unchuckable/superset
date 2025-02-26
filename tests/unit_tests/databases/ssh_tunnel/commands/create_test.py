@@ -77,13 +77,44 @@ def test_create_ssh_tunnel_command_invalid_params() -> None:
 
 
 def test_create_ssh_tunnel_command_no_port() -> None:
+    """
+    Test that SSH Tunnel can be created without explicit port but with a default one.
+    """
     from superset.commands.database.ssh_tunnel.create import CreateSSHTunnelCommand
+    from superset.databases.ssh_tunnel.models import SSHTunnel
     from superset.models.core import Database
 
     database = Database(
         id=1,
         database_name="my_database",
         sqlalchemy_uri="postgresql://u:p@localhost/db",
+    )
+
+    properties = {
+        "database": database,
+        "server_address": "123.132.123.1",
+        "server_port": "3005",
+        "username": "foo",
+        "password": "bar",
+    }
+
+    result = CreateSSHTunnelCommand(database, properties).run()
+
+    assert result is not None
+    assert isinstance(result, SSHTunnel)
+
+
+def test_create_ssh_tunnel_command_no_port_no_default() -> None:
+    """
+    Test that error is raised when creating SSH Tunnel without explicit/default ports.
+    """
+    from superset.commands.database.ssh_tunnel.create import CreateSSHTunnelCommand
+    from superset.models.core import Database
+
+    database = Database(
+        id=1,
+        database_name="my_database",
+        sqlalchemy_uri="weird+db://u:p@localhost/db",
     )
 
     properties = {
