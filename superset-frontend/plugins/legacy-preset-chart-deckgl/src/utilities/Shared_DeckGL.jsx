@@ -24,7 +24,6 @@ import {
   isFeatureEnabled,
   t,
   validateNonEmpty,
-  validateMapboxStylesUrl,
 } from '@superset-ui/core';
 import { D3_FORMAT_OPTIONS, sharedControls } from '@superset-ui/chart-controls';
 import { columnChoices, PRIMARY_COLOR } from './controls';
@@ -388,7 +387,6 @@ export const mapboxStyle = {
   },
 };
 
-
 export const geojsonColumn = {
   name: 'geojson',
   config: {
@@ -411,7 +409,7 @@ function registerMapStyle(name, url) {
 }
 
 // Additions to dynamically load styles
-fetch("/static/assets/config/mapstyles.json")
+fetch('/static/assets/config/mapstyles.json')
   .then(response => response.json())
   .then(data => {
     console.log(data);
