@@ -371,7 +371,7 @@ export const mapboxStyle = {
     clearable: false,
     renderTrigger: true,
     freeForm: true,
-    validators: [validateMapboxStylesUrl],
+    validators: [],
     choices: [
       ['mapbox://styles/mapbox/streets-v9', t('Streets')],
       ['mapbox://styles/mapbox/dark-v9', t('Dark')],
@@ -388,6 +388,7 @@ export const mapboxStyle = {
   },
 };
 
+
 export const geojsonColumn = {
   name: 'geojson',
   config: {
@@ -400,3 +401,20 @@ export const geojsonColumn = {
     }),
   },
 };
+
+function resetStyles() {
+  mapboxStyle.config.choices.length = 0;
+}
+
+function registerMapStyle(name, url) {
+  mapboxStyle.config.choices.push([url, t(name)]);
+}
+
+// Additions to dynamically load styles
+fetch("/static/assets/config/mapstyles.json")
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+    resetStyles();
+    data.forEach(entry => registerMapStyle(entry.name, entry.url));
+  });
